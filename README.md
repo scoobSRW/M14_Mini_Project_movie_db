@@ -1,200 +1,202 @@
 ﻿# M14_Mini_Project_movie_db
 
-Movie and Genre Management API
+# Movie and Genre Management API
 
 This project is a Flask-based GraphQL API for managing movies and genres. The API provides CRUD operations for movies and genres, allowing users to create, read, update, and delete records. It uses SQLAlchemy for database interactions and GraphQL for data querying.
 
-Features
+## Features
 
-Create, read, update, and delete genres.
+- Create, read, update, and delete genres.
+- Create, read, update, and delete movies.
+- GraphQL API interface for flexible querying.
+- Uses Flask-SQLAlchemy and Graphene for ORM and GraphQL integration.
+- Includes data validation and error handling.
 
-Create, read, update, and delete movies.
+## Installation
 
-GraphQL API interface for flexible querying.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
 
-Uses Flask-SQLAlchemy and Graphene for ORM and GraphQL integration.
+2. Create a virtual environment and activate it:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   ```
 
-Includes data validation and error handling.
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Installation
+4. Configure the database:
+   - Ensure you have MySQL installed and running.
+   - Create a database named `movie_db`:
+     ```sql
+     CREATE DATABASE movie_db;
+     ```
+   - Update the `password` variable in the `confidential.py` file with your MySQL root password.
 
-Clone the repository:
+5. Initialize the database:
+   ```bash
+   flask shell
+   >>> from models import db
+   >>> db.create_all()
+   >>> exit()
+   ```
 
-git clone <repository-url>
-cd <repository-folder>
+6. Start the application:
+   ```bash
+   python app.py
+   ```
 
-Create a virtual environment and activate it:
+7. Access the GraphQL interface:
+   Open your browser and navigate to `http://localhost:5000/graphql`.
 
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+## GraphQL Queries and Mutations
 
-Install dependencies:
+### Queries
 
-pip install -r requirements.txt
-
-Configure the database:
-
-Ensure you have MySQL installed and running.
-
-Create a database named movie_db:
-
-CREATE DATABASE movie_db;
-
-Update the password variable in the confidential.py file with your MySQL root password.
-
-Initialize the database:
-
-flask shell
->>> from models import db
->>> db.create_all()
->>> exit()
-
-Start the application:
-
-python app.py
-
-Access the GraphQL interface:
-Open your browser and navigate to http://localhost:5000/graphql.
-
-GraphQL Queries and Mutations
-
-Queries
-
-Retrieve all movies:
-
-query {
-  movies {
-    id
-    title
-    description
-    year
-    genre {
-      id
-      name
-    }
-  }
-}
-
-Retrieve all genres:
-
-query {
-  genres {
-    id
-    name
-  }
-}
-
-Get movies by genre:
-
-query {
-  getMoviesByGenre(genreId: 1) {
-    id
-    title
-    year
-  }
-}
-
-Get genre by movie:
-
-query {
-  getGenreByMovie(movieId: 1) {
-    id
-    name
-  }
-}
-
-Mutations
-
-Add a new genre:
-
-mutation {
-  createGenre(name: "Comedy") {
-    genre {
-      id
-      name
-    }
-  }
-}
-
-Update an existing genre:
-
-mutation {
-  updateGenre(id: 1, name: "Drama") {
-    genre {
-      id
-      name
-    }
-  }
-}
-
-Delete a genre:
-
-mutation {
-  deleteGenre(id: 1) {
-    success
-  }
-}
-
-Add a new movie:
-
-mutation {
-  createMovie(title: "Inception", description: "A sci-fi thriller", year: 2010, genreId: 1) {
-    movie {
+- **Retrieve all movies:**
+  ```graphql
+  query {
+    movies {
       id
       title
+      description
+      year
+      genre {
+        id
+        name
+      }
     }
   }
-}
+  ```
 
-Update an existing movie:
+- **Retrieve all genres:**
+  ```graphql
+  query {
+    genres {
+      id
+      name
+    }
+  }
+  ```
 
-mutation {
-  updateMovie(id: 1, title: "Interstellar", year: 2014) {
-    movie {
+- **Get movies by genre:**
+  ```graphql
+  query {
+    getMoviesByGenre(genreId: 1) {
       id
       title
+      year
     }
   }
-}
+  ```
 
-Delete a movie:
-
-mutation {
-  deleteMovie(id: 1) {
-    success
+- **Get genre by movie:**
+  ```graphql
+  query {
+    getGenreByMovie(movieId: 1) {
+      id
+      name
+    }
   }
-}
+  ```
 
-Project Structure
+### Mutations
 
-app.py: Main application entry point.
+- **Add a new genre:**
+  ```graphql
+  mutation {
+    createGenre(name: "Comedy") {
+      genre {
+        id
+        name
+      }
+    }
+  }
+  ```
 
-models.py: Database models for Movie and Genre.
+- **Update an existing genre:**
+  ```graphql
+  mutation {
+    updateGenre(id: 1, name: "Drama") {
+      genre {
+        id
+        name
+      }
+    }
+  }
+  ```
 
-schemas.py: GraphQL schema and resolver definitions.
+- **Delete a genre:**
+  ```graphql
+  mutation {
+    deleteGenre(id: 1) {
+      success
+    }
+  }
+  ```
 
-confidential.py: Stores sensitive data like database passwords.
+- **Add a new movie:**
+  ```graphql
+  mutation {
+    createMovie(title: "Inception", description: "A sci-fi thriller", year: 2010, genreId: 1) {
+      movie {
+        id
+        title
+      }
+    }
+  }
+  ```
 
-requirements.txt: Lists Python dependencies.
+- **Update an existing movie:**
+  ```graphql
+  mutation {
+    updateMovie(id: 1, title: "Interstellar", year: 2014) {
+      movie {
+        id
+        title
+      }
+    }
+  }
+  ```
 
-Requirements
+- **Delete a movie:**
+  ```graphql
+  mutation {
+    deleteMovie(id: 1) {
+      success
+    }
+  }
+  ```
 
-Python 3.8+
+## Project Structure
 
-MySQL
+- `app.py`: Main application entry point.
+- `models.py`: Database models for Movie and Genre.
+- `schemas.py`: GraphQL schema and resolver definitions.
+- `confidential.py`: Stores sensitive data like database passwords.
+- `requirements.txt`: Lists Python dependencies.
 
-Flask
+## Requirements
 
-Flask-SQLAlchemy
+- Python 3.8+
+- MySQL
+- Flask
+- Flask-SQLAlchemy
+- Graphene
+- Flask-GraphQL
+- PyMySQL
 
-Graphene
-
-Flask-GraphQL
-
-PyMySQL
-
-License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
+---
+
 For further questions or issues, feel free to contact the project maintainer.
+
